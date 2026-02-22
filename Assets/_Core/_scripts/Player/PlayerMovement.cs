@@ -30,9 +30,13 @@ public class PlayerMovement : MonoBehaviour
     private float _WalkSprintTransition; 
     private bool _IsGround;
     [SerializeField] InputSystem _InputManager;
+    
     private Rigidbody rb;
+    private Camera camera;
+    
     private void Awake()
     {
+        camera = Camera.main;
         rb = GetComponent<Rigidbody>(); 
     }
     private void OnEnable()
@@ -64,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (input.magnitude > 0.1f)
         {
-            float RotasiAngle = Mathf.Atan2(input.x,input.y) * Mathf.Rad2Deg;
+            float RotasiAngle = Mathf.Atan2(input.x,input.y) * Mathf.Rad2Deg + camera.transform.eulerAngles.y;
             float SmoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, RotasiAngle, ref _RotationSmoothSpeed, _RotationSmoothTime);
             transform.rotation = Quaternion.Euler(0f, SmoothAngle, 0f);
             MovementDirection = Quaternion.Euler(0f, RotasiAngle, 0f) * Vector3.forward;
