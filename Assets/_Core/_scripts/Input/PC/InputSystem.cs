@@ -78,9 +78,14 @@ public class InputSystem : MonoBehaviour
     }
     void Update()
     {
-        CheckMoveInout();
         CheckJumpInout();   
         CheckPovInput();
         CheckSprintInput(); 
+    }
+
+    private void FixedUpdate()
+    {
+        CheckMoveInout();
+
     }
 }

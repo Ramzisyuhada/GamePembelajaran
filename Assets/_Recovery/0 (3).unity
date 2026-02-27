@@ -1614,7 +1614,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!82 &112453771
 AudioSource:
   m_ObjectHideFlags: 0
@@ -39912,35 +39912,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7876704554760629508, guid: 8ed21757cffe048448a6521a1ca0556e, type: 3}
       propertyPath: m_ImplicitCom
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7876704554760629508, guid: 8ed21757cffe048448a6521a1ca0556e, type: 3}
-      propertyPath: m_Interpolate
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7876704554760629508, guid: 8ed21757cffe048448a6521a1ca0556e, type: 3}
-      propertyPath: m_IsKinematic
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7876704554760629508, guid: 8ed21757cffe048448a6521a1ca0556e, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7876704554760629508, guid: 8ed21757cffe048448a6521a1ca0556e, type: 3}
       propertyPath: m_LinearDamping
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7876704554760629508, guid: 8ed21757cffe048448a6521a1ca0556e, type: 3}
       propertyPath: m_ImplicitTensor
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8995444221998437338, guid: 8ed21757cffe048448a6521a1ca0556e, type: 3}
-      propertyPath: _JumpForce
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8995444221998437338, guid: 8ed21757cffe048448a6521a1ca0556e, type: 3}
       propertyPath: _WalkSpeed
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8995444221998437338, guid: 8ed21757cffe048448a6521a1ca0556e, type: 3}
-      propertyPath: _SprintSpeed
-      value: 6
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 8995444221998437338, guid: 8ed21757cffe048448a6521a1ca0556e, type: 3}
       propertyPath: _InputManager

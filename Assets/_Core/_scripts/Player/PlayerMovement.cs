@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnDestroy()
     {
-                Unsubscribe();
+       Unsubscribe();
 
     }
 
@@ -71,20 +71,47 @@ public class PlayerMovement : MonoBehaviour
     }
     public void MoveOn(Vector2 input)
     {
-        Vector3 MovementDirection = Vector3.zero;
+        Vector3 movementDirection = Vector3.zero;
 
+        // Ambil velocity horizontal saja
+        Vector3 velocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
-        Vector3 velocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-        Debug.Log( "Nilai Kecepatan Drai Input Player : "+ velocity.magnitude * input.magnitude);
-        _anim.SetFloat("Velocity", velocity.magnitude * input.magnitude);
+        // Kirim ke animator (tanpa dikali input lagi)
+        _anim.SetFloat("Velocity", velocity.magnitude *input.magnitude);
+
         if (input.magnitude > 0.1f)
         {
+            // Hitung sudut rotasi berdasarkan kamera
+            float targetAngle = Mathf.Atan2(input.x, input.y) * Mathf.Rad2Deg
+                                + camera.transform.eulerAngles.y;
 
-            float RotasiAngle = Mathf.Atan2(input.x,input.y) * Mathf.Rad2Deg + camera.transform.eulerAngles.y;
-            float SmoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, RotasiAngle, ref _RotationSmoothSpeed, _RotationSmoothTime);
-            transform.rotation = Quaternion.Euler(0f, SmoothAngle, 0f);
-            MovementDirection = Quaternion.Euler(0f, RotasiAngle, 0f) * Vector3.forward;
-            rb.AddForce(MovementDirection * Time.deltaTime * _Speed);
+            float smoothAngle = Mathf.SmoothDampAngle(
+                transform.eulerAngles.y,
+                targetAngle,
+                ref _RotationSmoothSpeed,
+                _RotationSmoothTime
+            );
+
+            transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
+
+            // Hitung arah gerak
+            movementDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+            // Set velocity dengan speed
+            rb.linearVelocity = new Vector3(
+                movementDirection.x * _Speed,
+                rb.linearVelocity.y, // jangan ganggu gravitasi
+                movementDirection.z * _Speed
+            );
+        }
+        else
+        {
+            // Kalau tidak ada input, stop horizontal movement
+            rb.linearVelocity = new Vector3(
+                0f,
+                rb.linearVelocity.y,
+                0f
+            );
         }
     }
     private void CheckGrounded()
@@ -102,7 +129,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_IsGround)
         {
-            rb.AddForce(Vector3.up * _JumpForce * Time.deltaTime);
+            rb.linearVelocity = new Vector3(
+     rb.linearVelocity.x,
+     0f,
+     rb.linearVelocity.z
+ );
+
+            rb.AddForce(Vector3.up * _JumpForce, ForceMode.Impulse);
             _anim.SetTrigger("IsJump");
 
         }
@@ -112,7 +145,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (IsSprint)
         {
-            // Naik menuju sprint speed
             if (_Speed < _SprintSpeed)
             {
                 _Speed = _Speed + _WalkSprintTransition * Time.deltaTime;
