@@ -55,6 +55,11 @@ public class PlayerMovement : MonoBehaviour
     private void OnDisable()
     {
     }
+
+    private void PovMouseOn(bool Click)
+    {
+
+    }
     private void Subscribe()
     {
         _InputManager.OnMoveInput += MoveOn;
@@ -73,11 +78,9 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 movementDirection = Vector3.zero;
 
-        // Ambil velocity horizontal saja
-        Vector3 velocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
-        // Kirim ke animator (tanpa dikali input lagi)
-        _anim.SetFloat("Velocity", velocity.magnitude *input.magnitude);
+        _anim.SetFloat("Velocity", horizontalVelocity.magnitude);
 
         if (input.magnitude > 0.1f)
         {
@@ -97,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
             // Hitung arah gerak
             movementDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
-            // Set velocity dengan speed
+            // Set velocity horizontal saja
             rb.linearVelocity = new Vector3(
                 movementDirection.x * _Speed,
                 rb.linearVelocity.y, // jangan ganggu gravitasi
@@ -106,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            // Kalau tidak ada input, stop horizontal movement
+            // Stop perlahan (lebih natural)
             rb.linearVelocity = new Vector3(
                 0f,
                 rb.linearVelocity.y,
@@ -124,7 +127,20 @@ public class PlayerMovement : MonoBehaviour
     {
 
     }
+    [SerializeField] float fallMultiplier = 2.5f;
+    [SerializeField] float lowJumpMultiplier = 2f;
 
+    private void FixedUpdate()
+    {
+        if (rb.linearVelocity.y < 0)
+        {
+            rb.linearVelocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+        }
+        else if (rb.linearVelocity.y > 0 && !Keyboard.current.spaceKey.isPressed)
+        {
+            rb.linearVelocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
+        }
+    }
     public void JumpOn()
     {
         if (_IsGround)

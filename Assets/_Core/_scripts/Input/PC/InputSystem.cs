@@ -14,6 +14,7 @@ public class InputSystem : MonoBehaviour
     private InputAction JumpAction;
     private InputAction PovAction;
     private InputAction SprintAction;
+    private InputAction MouseClickAction;
 
 
     private InputActionMap playerMap;
@@ -23,19 +24,12 @@ public class InputSystem : MonoBehaviour
     public Action OnJumpInput;
     public Action<Vector2> OnPovInput;
     public Action<bool> OnSprintInput;
-
-    
-    private void OnEnable()
+    public Action<bool> Pause;
+    private void Start()
     {
-        playerMap.Enable();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
-    private void OnDisable()
-    {
-
-        playerMap.Disable();
-
-    }
     private void Awake()
     {
         playerMap = inputActions.FindActionMap("Player");
@@ -43,9 +37,10 @@ public class InputSystem : MonoBehaviour
         JumpAction = playerMap.FindAction("Jump");
         PovAction = playerMap.FindAction("Look");
         SprintAction = playerMap.FindAction("Sprint");
+        MouseClickAction = playerMap.FindAction("Fire");
 
     }
-
+  
     private void CheckMoveInout()
     {
         
@@ -78,8 +73,8 @@ public class InputSystem : MonoBehaviour
     }
     void Update()
     {
-        CheckJumpInout();   
-        CheckPovInput();
+ CheckPovInput();
+        CheckJumpInout();
         CheckSprintInput(); 
     }
 
